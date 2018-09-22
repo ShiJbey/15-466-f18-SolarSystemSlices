@@ -78,6 +78,8 @@ CLIENT_NAMES =
 	MeshBuffer
 	draw_text
 	Sound
+	SolarSystemSlicesGame
+	SolarSystemSlicesMode
 	;
 
 if $(OS) = NT {

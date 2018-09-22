@@ -1,3 +1,5 @@
+#include "SolarSystemSlicesMode.hpp"
+
 //Mode.hpp declares the "Mode::current" static member variable, which is used to decide where event-handling, updating, and drawing events go:
 #include "Mode.hpp"
 
@@ -34,8 +36,7 @@ int main(int argc, char **argv) {
 	try {
 #endif
 	struct {
-		//TODO: this is where you set the title and size of your game window
-		std::string title = "TODO: Game Title";
+		std::string title = "Solar System Slices";
 		glm::uvec2 size = glm::uvec2(640, 400);
 	} config;
 
@@ -115,8 +116,9 @@ int main(int argc, char **argv) {
 	call_load_functions();
 
 	//------------ create game mode + make current --------------
-
-	Mode::set_current(std::make_shared< GameMode >(client));
+	// TODO: Change this to point to a pizza game
+	//Mode::set_current(std::make_shared< GameMode >(client));
+	Mode::set_current(std::make_shared< SolarSystemSlices::SolarSystemSlicesMode >(client));
 
 	//------------ main loop ------------
 
@@ -175,7 +177,8 @@ int main(int argc, char **argv) {
 
 		{ //(3) call the current mode's "draw" function to produce output:
 			//clear the depth+color buffers and set some default state:
-			glClearColor(0.5, 0.5, 0.5, 0.0);
+			// TODO: CHANGE THE DEFAULT BACKGROUND COLOR
+			glClearColor(0.0, 0.5, 0.5, 0.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);

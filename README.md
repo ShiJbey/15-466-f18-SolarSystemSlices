@@ -1,11 +1,10 @@
 # Game Information
-(Note: fill in this portion with information about your game.)
 
-Title: (TODO: your game's title)
+Title: Solar System Slice
 
-Author: (TODO: your name)
+Author: Shi Johnson-Bey
 
-Design Document: [TODO: name of design document](TODO: link to design document)
+Design Document: [Solar System Slices](http://graphics.cs.cmu.edu/courses/15-466-f18/game2-designs/ishmaelj/)
 
 Screen Shot:
 
