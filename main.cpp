@@ -2,6 +2,8 @@
 
 //Mode.hpp declares the "Mode::current" static member variable, which is used to decide where event-handling, updating, and drawing events go:
 #include "Mode.hpp"
+#include "MenuMode.hpp"
+#include "SSS_Menus.hpp"
 
 //Load.hpp is included because of the call_load_functions() call:
 #include "Load.hpp"
@@ -31,13 +33,33 @@
 #include <memory>
 #include <algorithm>
 
+
+ std::shared_ptr< MenuMode > create_main_menu(Client &client_) {
+	std::shared_ptr< MenuMode > menu = std::make_shared< MenuMode >();
+
+
+	menu->choices.emplace_back("SOLAR SYSTEM SLICES");
+	menu->choices.emplace_back("PLAY", [&client_](){
+		Mode::set_current(std::make_shared< SolarSystemSlices::SolarSystemSlicesMode >(client_));
+	});
+	menu->choices.emplace_back("QUIT", [](){
+		Mode::set_current(nullptr);
+	});
+
+	menu->selected = 1;
+
+	Mode::set_current(menu);
+
+	return menu;
+}
+
 int main(int argc, char **argv) {
 #ifdef _WIN32
 	try {
 #endif
 	struct {
 		std::string title = "Solar System Slices";
-		glm::uvec2 size = glm::uvec2(640, 400);
+		glm::uvec2 size = glm::uvec2(800, 600);
 	} config;
 
 	//----- start connection to server ----
@@ -118,7 +140,9 @@ int main(int argc, char **argv) {
 	//------------ create game mode + make current --------------
 	// TODO: Change this to point to a pizza game
 	//Mode::set_current(std::make_shared< GameMode >(client));
-	Mode::set_current(std::make_shared< SolarSystemSlices::SolarSystemSlicesMode >(client));
+	//Mode::set_current(std::make_shared< SolarSystemSlices::SolarSystemSlicesMode >(client));
+	//Mode::set_current(create_main_menu(client));
+	Mode::set_current(std::make_shared< MainMenu >(client));
 
 	//------------ main loop ------------
 
