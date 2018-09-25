@@ -103,20 +103,20 @@ namespace SolarSystemSlices {
 
         uint32_t get_winner() {
             if(player_1.missing_items(current_order) < player_2.missing_items(current_order)) {
-                std::cout << "RED is missing items" << std::endl;
+               // std::cout << "RED is missing items" << std::endl;
                 return 1;
             } else if (player_1.missing_items(current_order) > player_2.missing_items(current_order)) {
-                std::cout << "BLUE is missing items" << std::endl;
+                //std::cout << "BLUE is missing items" << std::endl;
                 return 2;
             } else {
                 if (player_1.get_total_collected() > player_2.get_total_collected()) {
-                    std::cout << "RED collected more items" << std::endl;
+                    //std::cout << "RED collected more items" << std::endl;
                     return 1;
                 } else if (player_1.get_total_collected() < player_2.get_total_collected()) {
-                    std::cout << "BLUE collected more items" << std::endl;
+                   // std::cout << "BLUE collected more items" << std::endl;
                     return 2;
                 } else {
-                    std::cout << "TIE" << std::endl;
+                    //std::cout << "TIE" << std::endl;
                     return 0;
                 }
             }

@@ -99,18 +99,23 @@ int main(int argc, char **argv) {
 		server.poll([&](Connection *c, Connection::Event evt){
 			if (evt == Connection::OnOpen) {
 			} else if (evt == Connection::OnClose) {
+				
 				// Remove this connection from its lobby
 				Lobby* lobby = get_lobby(lobbies, c);
+
 				if (c == lobby->player_1_connection) {
+					std::cout << "Player 1 Left Lobby" << std::endl;
 					lobby->player_1_connection = nullptr;
 				} else {
+					std::cout << "Player 2 Left Lobby" << std::endl;
 					lobby->player_2_connection = nullptr;
 				}
 
 				// Close the lobby when both players leave
 				if (lobby->player_1_connection == nullptr && lobby->player_2_connection == nullptr) {
-					remove_lobby(lobbies, lobby);
 					std::cout << "Closing lobby..." << std::endl; 
+					remove_lobby(lobbies, lobby);
+					std::cout << "Lobby Closed" << std::endl; 
 				}
 
 			} else { assert(evt == Connection::OnRecv);
@@ -122,18 +127,22 @@ int main(int argc, char **argv) {
 					Lobby* lobby = add_to_lobby(lobbies, c);
 
 					if (c == lobby->player_1_connection) {
+						std::cout << "Player 1 finished" << std::endl;
 						lobby->state.player_1_finished = true;
 					} else {
+						std::cout << "Player 2 finished" << std::endl;
 						lobby->state.player_2_finished = true;
 					}
 
-					if (lobby->state.player_1_finished && lobby->state.player_2_finished) {
+					if (lobby->state.player_1_finished && lobby->state.player_2_finished && lobby->state.game_started) {
 						uint32_t winner = lobby->state.get_winner();
-						//std::cout << "Winner is: " << winner << std::endl;
+						std::cout << "Winner is: " << winner << std::endl;
 						lobby->player_1_connection->send_raw("R", 1);
 						lobby->player_2_connection->send_raw("R", 1);
 						lobby->player_1_connection->send_raw(&winner, sizeof(uint32_t));
 						lobby->player_2_connection->send_raw(&winner, sizeof(uint32_t));
+						
+						lobby->state.game_started = false;
 					}
 				}
 
@@ -147,6 +156,12 @@ int main(int argc, char **argv) {
                     	c->recv_buffer.erase(c->recv_buffer.begin(), c->recv_buffer.begin() + sizeof(uint32_t));
 
 						Lobby* lobby = add_to_lobby(lobbies, c);
+
+						if (c == lobby->player_1_connection) {
+							std::cout << "Player 1 claimed ingrredient: " << ingredient << std::endl;
+						} else {
+							std::cout << "Player 2 claimed ingrredient: " << ingredient << std::endl;
+						}
 
 						// Find it
 						for (uint32_t i = 0; i < lobby->state.floating_ingredients.size(); i++) {
@@ -171,6 +186,7 @@ int main(int argc, char **argv) {
 								lobby->player_2_connection->send_raw("H", 1);
 								lobby->player_1_connection->send_raw(&ingredient, sizeof(uint32_t));
 								lobby->player_2_connection->send_raw(&ingredient, sizeof(uint32_t));
+								break;
 							}
 						}
 

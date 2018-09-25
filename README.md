@@ -16,19 +16,19 @@ TODO: Move with WASD, Speed boost with SpaceBar. Collect the pizza toppings list
 
 Changes From The Design Document:
 
-* I could not use any values with number in the GUI since we do not yet have support for those fonts.
-* No race timer
-* Win screen is super simplified
-* No explosions on collision with asteroid
+* I couldn't use numerical chracters in the GUI since we do not yet have support for those fonts.
+* No race timer.
+* Win screen only displays who won instead of a breakdown for how scores were calculated.
+* No explosions on collision with asteroids
 
 Good / Bad / Ugly Code:
 
-* I like my game Lobby code that I added to server.cpp. For most of the project it was pretty reliable when having
-more than one 1 vs 1 match playing. It made coordinating communication simple and solved the problem of mapping messages
-to specific game instances. 
+* I like the game lobby code I wrote for in server.cpp. It made coordinating communication simple and solved the problem of mapping messages
+to specific game instances. Also it allowed my game to scale to have more than one game instance running at a time.
 
-* As for ugly code, the update function is extremely too long and really breaks the principle of a function serving only
-a single purpose.
+* I give nominations for bad code awards to SolarSystemSlicesMode.hpp and SolarSystemSlicesGame.hpp. SolarSystemSlicesMode.hpp had too many variables that I created for convenience and some of them may never get used. SolarSystemSlicesGame.hpp just has too much code placed in the header file. Some functions should have been moved to the .cpp file.
+
+* As for ugly code, the update function is extremely too long and really breaks the principle of a function serving only a single purpose.
 
 # Using This Base Code
 
@@ -65,22 +65,10 @@ Before you dive into the code, it helps to understand the overall structure of t
 The ```meshes/export-meshes.py``` script can write mesh data including a variety of attributes (e.g., *p*ositions, *n*ormals, *c*olors, *t*excoords) from a selected layer of a blend file:
 
 ```
-blender --background --python meshes/export-meshes.py -- meshes/crates.blend:1 dist/crates.pnc
+blender --background --python meshes/export-meshes.py -- meshes/sss_assets.blend dist/sss_assets.pnc
 ```
 
-The ```meshes/export-scene.py``` script can write the transformation hierarchy of the scene from a selected layer of a blend file, and includes references to meshes (by name):
-
-```
-blender --background --python meshes/export-scene.py -- meshes/crates.blend:1 dist/crates.scene
-```
-
-The ```meshes/export-walkmeshes.py``` script can writes vertices, normals, and triangle indicies of all meshes on a selected layer of a .blend file:
-
-```
-blender --background --python meshes/export-walkmeshes.py -- meshes/crates.blend:3 dist/crates.walkmesh
-```
-
-There is a Makefile in the ```meshes``` directory with some example commands of this sort in it as well.
+On Wsindows, you can run the export.bat file to build the assets
 
 ## Runtime Build Instructions
 

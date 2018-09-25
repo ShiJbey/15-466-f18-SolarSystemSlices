@@ -35,7 +35,7 @@ struct WaitingMenu : public MenuMode {
     WaitingMenu(std::shared_ptr<SolarSystemSlices::SolarSystemSlicesMode> game_mode_) {
         game_mode = game_mode_;
         background = game_mode;   
-        choices.emplace_back("WAITING ON OTHER PLAYER");
+        choices.emplace_back("WAITING");
     }
 
     // Checks the background game mode to see if

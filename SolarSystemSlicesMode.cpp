@@ -348,10 +348,11 @@ void SolarSystemSlices::SolarSystemSlicesMode::update( float elapsed ) {
             // Update asteroids
             for (uint32_t i = 0; i < state.asteroids.size(); i++) {
                 state.asteroids[i].object->transform->position.x -= (player_vel.x * elapsed);
+                
                 // Check for collisions
                 if (glm::distance(my_ship->transform->position, state.asteroids[i].object->transform->position) < 0.75f) {
-                    std::cout << "Collided with asteroid" << std::endl;
-                    my_ship->transform->position = start_position;
+                   // std::cout << "Collided with asteroid" << std::endl;
+                    //my_ship->transform->position = start_position;
                 }
             }
 
@@ -367,7 +368,11 @@ void SolarSystemSlices::SolarSystemSlicesMode::update( float elapsed ) {
         
     }
 
-    if (finish_line[0]->transform->position.x < my_ship->transform->position.x) {
+    if (finish_line[0]->transform->position.x < my_ship->transform->position.x && !finish_line_reached) {
+        std::cout << "Finish line crossed" << std::endl;
+        if (client.connection) {
+            client.connection.send_raw("D", 1);
+        }
         finish_line_reached = true;
     }
 
@@ -380,10 +385,6 @@ void SolarSystemSlices::SolarSystemSlicesMode::update( float elapsed ) {
         if (!player_ready && my_player->planet != "") {
             send_planet_name();            
             player_ready = true; 
-        }
-
-        if (finish_line_reached) {
-            client.connection.send_raw("D", 1);
         }
     }
 
@@ -399,6 +400,7 @@ void SolarSystemSlices::SolarSystemSlicesMode::update( float elapsed ) {
                 if (c->recv_buffer.size() < 1 + sizeof(uint32_t)) {
 					return;
                 } else {
+
                     c->recv_buffer.erase(c->recv_buffer.begin(), c->recv_buffer.begin() + 1);
                     uint32_t ingredient_to_remove = -1U;
                     memcpy(&ingredient_to_remove, c->recv_buffer.data(), sizeof(uint32_t));
@@ -426,6 +428,7 @@ void SolarSystemSlices::SolarSystemSlicesMode::update( float elapsed ) {
                     memcpy(&winner, c->recv_buffer.data(), sizeof(uint32_t));
                     c->recv_buffer.erase(c->recv_buffer.begin(), c->recv_buffer.begin() + sizeof(uint32_t));
                     winner_received = true;
+                    state.game_started = false;
                 }
             }
 
@@ -689,7 +692,7 @@ void SolarSystemSlices::SolarSystemSlicesMode::draw( glm::uvec2 const &drawable_
 
             glDisable(GL_DEPTH_TEST);
             
-            std::string message = "WAITING FOR OTHER PLAYER";
+            std::string message = "*WAITING*";
             float height = 0.1f;
             float width = text_width(message, height);
             draw_text(message, glm::vec2(-0.5f * width,-0.5f), height, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -744,7 +747,13 @@ void SolarSystemSlices::SolarSystemSlicesMode::show_planet_selection_menu() {
     std::shared_ptr< Mode > game = shared_from_this();
     menu->background = game;
 
-    menu->choices.emplace_back("CHOOSE A PLANET");
+    if (player_number == 1) {
+        menu->choices.emplace_back("RED CHOOSE A PLANET");
+    } else {
+        menu->choices.emplace_back("BLUE CHOOSE A PLANET");
+    }
+
+    
     menu->choices.emplace_back("MERCURY", [game](){
         // Recast the game
         std::shared_ptr< SolarSystemSlices::SolarSystemSlicesMode > mode;
