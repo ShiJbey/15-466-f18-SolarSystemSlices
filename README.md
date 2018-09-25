@@ -12,15 +12,23 @@ Screen Shot:
 
 How To Play:
 
-TODO: describe the controls and (if needed) goals/strategy.
+TODO: Move with WASD, Speed boost with SpaceBar. Collect the pizza toppings listed in the order and avoid the asteroids.
 
 Changes From The Design Document:
 
-TODO: what did you need to add/remove/modify from the original design? Why?
+* I could not use any values with number in the GUI since we do not yet have support for those fonts.
+* No race timer
+* Win screen is super simplified
+* No explosions on collision with asteroid
 
 Good / Bad / Ugly Code:
 
-TODO: provide examples of code you wrote from this project that you think is good (elegant, simple, useful), bad (hack-y, brittle, unreadable), and ugly (particularly inelegant). Provide a sentence or two of justification for the examples.
+* I like my game Lobby code that I added to server.cpp. For most of the project it was pretty reliable when having
+more than one 1 vs 1 match playing. It made coordinating communication simple and solved the problem of mapping messages
+to specific game instances. 
+
+* As for ugly code, the update function is extremely too long and really breaks the principle of a function serving only
+a single purpose.
 
 # Using This Base Code
 
